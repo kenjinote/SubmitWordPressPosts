@@ -56,7 +56,7 @@ BOOL PostWordPress(LPCWSTR lpszURL, LPCWSTR lpszUserName, LPCWSTR lpszPassWord, 
 	uc.lpszUrlPath = szUrlPath;
 	uc.dwHostNameLength = 1000;
 	uc.dwUrlPathLength = 1000;
-	if (!InternetCrackUrlW(lpszURL, 0, 0, &uc)) return;
+	if (!InternetCrackUrlW(lpszURL, 0, 0, &uc)) return FALSE;
 	LPSTR lpszHostName = GetMultiByteString(CP_ACP, szHostName);
 	LPSTR lpszUrlPath = GetMultiByteString(CP_ACP, szUrlPath);
 	XmlRpcClient c(lpszHostName, uc.nPort, lpszUrlPath);
@@ -156,6 +156,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			GlobalFree(lpszTitle);
 			GlobalFree(lpszContent);
 			MessageBox(hWnd, bSuccess ? TEXT("投稿しました！") : TEXT("何らかのエラーが発生しました。"), TEXT("確認"), 0);
+			if (bSuccess)
+			{
+				SetWindowText(hEditTitle, 0);
+				SetWindowText(hEditContent, 0);
+			}
 		}
 		else if (LOWORD(wParam) == IDCANCEL)
 		{
