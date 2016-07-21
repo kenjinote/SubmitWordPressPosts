@@ -46,7 +46,7 @@ LPWSTR GetTextFromEdit(HWND hWnd)
 	return lpszReturnString;
 }
 
-void PostWordPress(LPCWSTR lpszURL, LPCWSTR lpszUserName, LPCWSTR lpszPassWord, LPCWSTR lpszTitle, LPCWSTR lpszContent)
+BOOL PostWordPress(LPCWSTR lpszURL, LPCWSTR lpszUserName, LPCWSTR lpszPassWord, LPCWSTR lpszTitle, LPCWSTR lpszContent)
 {
 	URL_COMPONENTS uc = { 0 };
 	WCHAR szHostName[1000];
@@ -78,8 +78,9 @@ void PostWordPress(LPCWSTR lpszURL, LPCWSTR lpszUserName, LPCWSTR lpszPassWord, 
 	GlobalFree(lpszTitleA);
 	GlobalFree(lpszContentA);
 	XmlRpcValue result;
-	c.execute("wp.newPost", multicall, result);
+	const BOOL bReturnValue = c.execute("wp.newPost", multicall, result);
 	c.close();
+	return bReturnValue;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -148,13 +149,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			LPWSTR lpszPassWord = GetTextFromEdit(hEditPassWord);
 			LPWSTR lpszTitle = GetTextFromEdit(hEditTitle);
 			LPWSTR lpszContent = GetTextFromEdit(hEditContent);
-			PostWordPress(lpszURL,lpszUserName, lpszPassWord, lpszTitle, lpszContent);
+			const BOOL bSuccess = PostWordPress(lpszURL,lpszUserName, lpszPassWord, lpszTitle, lpszContent);
 			GlobalFree(lpszURL);
 			GlobalFree(lpszUserName);
 			GlobalFree(lpszPassWord);
 			GlobalFree(lpszTitle);
 			GlobalFree(lpszContent);
-			MessageBox(hWnd, TEXT("確認"), TEXT("確認"), 0);
+			MessageBox(hWnd, bSuccess ? TEXT("投稿しました！") : TEXT("何らかのエラーが発生しました。"), TEXT("確認"), 0);
 		}
 		else if (LOWORD(wParam) == IDCANCEL)
 		{
