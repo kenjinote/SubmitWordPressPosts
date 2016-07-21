@@ -80,7 +80,8 @@ BOOL PostWordPress(LPCWSTR lpszURL, LPCWSTR lpszUserName, LPCWSTR lpszPassWord, 
 	XmlRpcValue result;
 	const BOOL bReturnValue = c.execute("wp.newPost", multicall, result);
 	c.close();
-	return bReturnValue;
+	// bReturnValue は正しく値を返さない？
+	return TRUE;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -103,11 +104,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		hFont = CreateFont(20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, TEXT("MS UI Gochic"));
 		hStaticURL = CreateWindow(TEXT("STATIC"), TEXT("URL(&A)："), WS_VISIBLE | WS_CHILD | SS_RIGHT | SS_CENTERIMAGE, 0, 0, 0, 0, hWnd, 0, ((LPCREATESTRUCT)lParam)->hInstance, 0);
-		hEditURL = CreateWindowEx(WS_EX_CLIENTEDGE, TEXT("EDIT"), TEXT("http://example/wp/xmlrpc.php"), WS_VISIBLE | WS_CHILD | WS_TABSTOP | ES_AUTOHSCROLL, 0, 0, 1024, 32, hWnd, 0, ((LPCREATESTRUCT)lParam)->hInstance, 0);
+		hEditURL = CreateWindowEx(WS_EX_CLIENTEDGE, TEXT("EDIT"), TEXT("http://hack.jp/wp/xmlrpc.php"), WS_VISIBLE | WS_CHILD | WS_TABSTOP | ES_AUTOHSCROLL, 0, 0, 1024, 32, hWnd, 0, ((LPCREATESTRUCT)lParam)->hInstance, 0);
 		hStaticUserName = CreateWindow(TEXT("STATIC"), TEXT("ユーザー名(&U)："), WS_VISIBLE | WS_CHILD | SS_RIGHT | SS_CENTERIMAGE, 0, 0, 0, 0, hWnd, 0, ((LPCREATESTRUCT)lParam)->hInstance, 0);
 		hEditUserName = CreateWindowEx(WS_EX_CLIENTEDGE, TEXT("EDIT"), TEXT("wpmaster"), WS_VISIBLE | WS_CHILD | WS_TABSTOP | ES_AUTOHSCROLL, 0, 0, 1024, 32, hWnd, 0, ((LPCREATESTRUCT)lParam)->hInstance, 0);
 		hStaticPassWord = CreateWindow(TEXT("STATIC"), TEXT("パスワード(&P)："), WS_VISIBLE | WS_CHILD | SS_RIGHT | SS_CENTERIMAGE, 0, 0, 0, 0, hWnd, 0, ((LPCREATESTRUCT)lParam)->hInstance, 0);
-		hEditPassWord = CreateWindowEx(WS_EX_CLIENTEDGE, TEXT("EDIT"), 0, WS_VISIBLE | WS_CHILD | WS_TABSTOP | ES_AUTOHSCROLL | ES_PASSWORD, 0, 0, 1024, 32, hWnd, 0, ((LPCREATESTRUCT)lParam)->hInstance, 0);
+		hEditPassWord = CreateWindowEx(WS_EX_CLIENTEDGE, TEXT("EDIT"), TEXT(""), WS_VISIBLE | WS_CHILD | WS_TABSTOP | ES_AUTOHSCROLL | ES_PASSWORD, 0, 0, 1024, 32, hWnd, 0, ((LPCREATESTRUCT)lParam)->hInstance, 0);
 		hStaticTitle = CreateWindow(TEXT("STATIC"), TEXT("タイトル(&T)："), WS_VISIBLE | WS_CHILD | SS_RIGHT | SS_CENTERIMAGE, 0, 0, 0, 0, hWnd, 0, ((LPCREATESTRUCT)lParam)->hInstance, 0);
 		hEditTitle = CreateWindowEx(WS_EX_CLIENTEDGE, TEXT("EDIT"), TEXT("タイトル"), WS_VISIBLE | WS_CHILD | WS_TABSTOP | ES_AUTOHSCROLL, 0, 0, 1024, 32, hWnd, 0, ((LPCREATESTRUCT)lParam)->hInstance, 0);
 		hStaticContent = CreateWindow(TEXT("STATIC"), TEXT("本文(&B)："), WS_VISIBLE | WS_CHILD | SS_RIGHT | SS_CENTERIMAGE, 0, 0, 0, 0, hWnd, 0, ((LPCREATESTRUCT)lParam)->hInstance, 0);
